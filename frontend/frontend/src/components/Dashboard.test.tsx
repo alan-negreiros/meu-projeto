@@ -1,9 +1,9 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Dashboard from './Dashboard';
-import { vi, describe, it, expect, beforeEach, type Mock } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 // Mock fetch
-vi.stubGlobal('fetch', vi.fn());
+global.fetch = vi.fn();
 
 describe('Dashboard Component', () => {
   beforeEach(() => {
@@ -13,7 +13,7 @@ describe('Dashboard Component', () => {
   const mockUser = { name: 'Test User' };
 
   it('renders correctly and fetches data', async () => {
-    (globalThis.fetch as Mock).mockImplementation((url: string) => {
+    (global.fetch as any).mockImplementation((url: string) => {
       if (url.includes('/sales')) {
         return Promise.resolve({ json: () => Promise.resolve({ sales: [] }), ok: true });
       }
@@ -37,7 +37,7 @@ describe('Dashboard Component', () => {
   });
 
   it('allows user to input payment amount', async () => {
-    (globalThis.fetch as Mock).mockImplementation((url: string) => {
+    (global.fetch as any).mockImplementation((url: string) => {
       if (url.includes('/sales')) {
         return Promise.resolve({ json: () => Promise.resolve({ sales: [] }), ok: true });
       }
@@ -62,7 +62,7 @@ describe('Dashboard Component', () => {
   });
 
   it('allows user to create new order', async () => {
-    (globalThis.fetch as Mock).mockImplementation((url: string) => {
+    (global.fetch as any).mockImplementation((url: string) => {
       if (url.includes('/sales')) {
         return Promise.resolve({ json: () => Promise.resolve({ sales: [] }), ok: true });
       }
@@ -86,7 +86,7 @@ describe('Dashboard Component', () => {
   });
 
   it('registers a sale after successful payment', async () => {
-    (globalThis.fetch as Mock).mockImplementation((url: string, options?: RequestInit) => {
+    (global.fetch as any).mockImplementation((url: string, options: any) => {
       if (url.includes('/sales') && (!options || options.method === 'GET')) {
         return Promise.resolve({ json: () => Promise.resolve({ sales: [] }), ok: true });
       }
