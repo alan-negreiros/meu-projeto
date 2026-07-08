@@ -1,0 +1,41 @@
+name: Order Service CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "order-service/order-service/**"
+      - ".github/workflows/order-service.yml"
+  pull_request:
+    paths:
+      - "order-service/order-service/**"
+      - ".github/workflows/order-service.yml"
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test order-service
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: order-service/order-service
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: order-service/order-service/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test

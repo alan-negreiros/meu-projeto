@@ -1,0 +1,41 @@
+name: Sales Service CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "sales-service/sales-service/**"
+      - ".github/workflows/sales-service.yml"
+  pull_request:
+    paths:
+      - "sales-service/sales-service/**"
+      - ".github/workflows/sales-service.yml"
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test sales-service
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: sales-service/sales-service
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: sales-service/sales-service/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
